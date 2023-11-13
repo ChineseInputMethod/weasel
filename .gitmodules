@@ -1,0 +1,3 @@
+[submodule "weasel"]
+	path = weasel
+	url = git@github.com:rime/weasel.git
