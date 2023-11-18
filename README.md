@@ -6,4 +6,4 @@
 
 doc目录里的文件是我对这个仓库编写的文档。
 
-[目录](https://github.com/ChineseInputMethod/weasel/tree/master/doc)
+[目录](https://github.com/ChineseInputMethod/weasel/blob/master/doc/catalogue.md)

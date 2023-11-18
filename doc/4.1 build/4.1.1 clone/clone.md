@@ -1,4 +1,4 @@
-### 4.1.1 [clone](https://github.com/ChineseInputMethod/weasel/tree/master/doc)
+### 4.1.1 [clone](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.1%20build/4.1.1%20clone/clone.md)
 
 最好按ssh格式下载：
 
