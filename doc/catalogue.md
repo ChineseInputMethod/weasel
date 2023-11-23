@@ -8,4 +8,4 @@
 
 ### 4.1.4 [build](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.1%20build/4.1.4%20build/build.md)
 
-## 4.2 [工程说明](https://github.com/ChineseInputMethod/weasel/tree/master/doc)
+## 4.2 [定制方案](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.2%20customization/guide.md)
