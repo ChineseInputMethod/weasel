@@ -73,6 +73,77 @@ engine:
     - echo_translator  # （無有其他結果時，）創建一個與編碼串一個模樣的候選項
 ```
 
-组件含义，参见`https://github.com/LEOYoon-Tsaw/Rime_collections/blob/master/Rime_description.md`。
-
 现在这个输入法实现了：以小写字母做为编码、以空格键做为选择键、以当前编码做为候选字词（英文输入）。
+
+4.2.1.3 x.dict.yaml
+
+修改`hello.schema.yaml`文件。
+
+```
+# Rime schema
+# encoding: utf-8
+#
+# 最簡單的 Rime 輸入方案
+#
+
+schema:
+  schema_id: hello    # 注意此ID與文件名裏 .schema.yaml 之前的部分相同
+  name: 大家好         # 將在〔方案選單〕中顯示
+  version: "3"        # 這是文字類型而非整數或小數，如 "1.2.3"
+
+engine:
+  processors:
+    - speller          # 把字母追加到編碼串
+    - express_editor   # 空格確認當前輸入、其他字符直接上屏
+  segmentors:
+    - abc_segmentor    # 標記輸入碼的類型
+  translators:
+    - echo_translator  # （無有其他結果時，）創建一個與編碼串一個模樣的候選項
+    - script_translator    # 腳本翻譯器
+
+translator:
+  dictionary: hello       # 設定 script_translator 使用的詞典名
+```
+
+这次在`hello.schema.yaml`文件中添加了码表组件。
+
+新建`hello.dict.yaml`文件，粘贴以下内容：
+
+```
+# Rime dictionary
+# encoding: utf-8
+
+---
+name: hello
+version: "1"
+sort: original
+...
+
+大家好	hello
+再見	bye
+再會	bye
+
+星期一	monday
+星期二	tuesday
+星期三	wednesday
+星期四	thursday
+星期五	friday
+星期六	saturday
+星期日	sunday
+
+星期一	weekday
+星期二	weekday
+星期三	weekday
+星期四	weekday
+星期五	weekday
+星期六	weekday
+星期日	weekday
+```
+
+将`hello.dict.yaml`文件保存至`hello.schema.yaml`所在文件夹。
+
+现在`大家好`这个方案，实现了输入法的基本功能。
+
+4.2.1.4 组件
+
+组件含义，参见`https://github.com/LEOYoon-Tsaw/Rime_collections/blob/master/Rime_description.md`。
