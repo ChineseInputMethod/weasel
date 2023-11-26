@@ -41,13 +41,12 @@ schema:
 
 4.2.1.2 x.schema.yaml
 
-定制一个输入法一般需要修改三个文件。
+定制一个输入法一般需要修改两个文件。
 
 file				|Description
 -|-
 x.schema.yaml		|方案，输入法的设计方案。
 x.dict.yaml			|词典，输入法的码表文件。
-weasel.custom.yaml	|配置，输入法的样式。
 
 现在继续修改`hello.schema.yaml`文件。
 
@@ -147,3 +146,58 @@ sort: original
 4.2.1.4 组件
 
 组件含义，参见`https://github.com/LEOYoon-Tsaw/Rime_collections/blob/master/Rime_description.md`。
+
+可以观察到，中州韵输入法引擎，是在`x.schema.yaml`文件里添加`组件`，实现输入法功能的。
+
+例如，想要实现数字键选择候选字词，在如下位置添加`selector`组件，即可实现。
+
+```
+engine:
+  processors:
+    - speller
+    - selector         # 選字、換頁
+    - express_editor
+```
+
+有时实现一个功能，需要添加多个相关组件。
+
+例如，想要实现中文标点符号输入，需要在`schema/processors`段落，添加`punctuator`组件。告诉输入法引擎，本方案需要处理符号键。
+
+在`schema/segmentors`段落，添加`punct_segmentor`组件。告诉输入法引擎，将符号做为编码串的切分。
+
+在`schema/translators`段落，添加`punct_translator`组件。告诉输入法引擎，要对符号进行转换。并在`punctuator`段落，导入`default`符号表。
+
+下面是实现上述功能的`hello.dict.yaml`文件内容。
+
+```
+# Rime schema
+# encoding: utf-8
+#
+# 最簡單的 Rime 輸入方案
+#
+
+schema:
+  schema_id: hello    # 注意此ID與文件名裏 .schema.yaml 之前的部分相同
+  name: 大家好         # 將在〔方案選單〕中顯示
+  version: "4"        # 這是文字類型而非整數或小數，如 "1.2.3"
+
+engine:
+  processors:
+    - speller          # 把字母追加到編碼串
+    - punctuator       # 處理符號按鍵
+    - selector         # 選字、換頁
+    - express_editor   # 空格確認當前輸入、其他字符直接上屏
+  segmentors:
+    - abc_segmentor    # 標記輸入碼的類型
+    - punct_segmentor  # 劃界，與前後方的其他編碼區分開
+  translators:
+    - echo_translator  # （無有其他結果時，）創建一個與編碼串一個模樣的候選項
+    - punct_translator # 轉換
+    - script_translator    # 腳本翻譯器
+
+translator:
+  dictionary: hello     # 設定 script_translator 使用的詞典名
+  
+punctuator:             # 設定符號表，這裏直接導入預設的
+  import_preset: default
+```
