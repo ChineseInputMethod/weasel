@@ -3,7 +3,7 @@
 中州韵输入法引擎是跨平台的输入法引擎。小狼毫输入法是使用中州韵引擎开发的Windows系统输入法。
 
 官方文档在`https://rime.im/docs/`。
-我参考其中`https://github.com/rime/home/wiki/RimeWithSchemata#%E7%B6%9C%E5%90%88%E6%BC%94%E7%B7%B4`部分，编写了本节。
+我参考其中`https://github.com/rime/home/wiki/RimeWithSchemata#%E7%B6%9C%E5%90%88%E6%BC%94%E7%B7%B4`部分，编写了本小节。
 
 在上一节编译成功后，会在/weasel/output/archives文件夹，生成weasel-x.x.x.x-installer.exe小狼毫安装程序。
 运行安装程序，安装小狼毫输入法。
@@ -201,3 +201,22 @@ translator:
 punctuator:             # 設定符號表，這裏直接導入預設的
   import_preset: default
 ```
+
+4.2.1.5 打包输入法
+
+将编辑好的`hello.schema.yaml`和`hello.dict.yaml`文件，保存到`/weasel/output/data`文件夹。
+
+打开vs命令行编译环境。
+
+进入/weasel目录，执行build.bat
+
+```batch
+build installer
+```
+
+编译后，会在/weasel/output/archives文件夹，生成weasel-x.x.x.x-installer.exe小狼毫安装程序。
+
+卸载已安装的小狼毫输入法，安装新生成的安装程序。
+如图所示，本小节编辑的输入法已打包到了安装程序中。
+
+![install](install.png)
