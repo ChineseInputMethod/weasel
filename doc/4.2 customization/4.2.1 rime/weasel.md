@@ -5,10 +5,10 @@
 官方文档在`https://rime.im/docs/`。
 我参考其中`https://github.com/rime/home/wiki/RimeWithSchemata#%E7%B6%9C%E5%90%88%E6%BC%94%E7%B7%B4`部分，编写了本小节。
 
-在上一节编译成功后，会在/weasel/output/archives文件夹，生成weasel-x.x.x.x-installer.exe小狼毫安装程序。
+在上一节编译成功后，会在/weasel/output/archives文件夹，生成weasel-*.*.*.*-installer.exe小狼毫安装程序。
 运行安装程序，安装小狼毫输入法。
 
-4.2.1.1 定制小狼毫
+#### 4.2.1.1 定制小狼毫
 
 新建`hello.schema.yaml`文件，粘贴以下内容：
 
@@ -39,14 +39,14 @@ schema:
 
 >每次修改方案，都要重新部署。
 
-4.2.1.2 x.schema.yaml
+#### 4.2.1.2 *.schema.yaml
 
 定制一个输入法一般需要修改两个文件。
 
 file				|Description
 -|-
-x.schema.yaml		|方案，输入法的设计方案。
-x.dict.yaml			|词典，输入法的码表文件。
+*.schema.yaml		|方案，输入法的设计方案。
+*.dict.yaml			|词典，输入法的码表文件。
 
 现在继续修改`hello.schema.yaml`文件。
 
@@ -74,7 +74,7 @@ engine:
 
 现在这个输入法实现了：以小写字母做为编码、以空格键做为选择键、以当前编码做为候选字词（英文输入）。
 
-4.2.1.3 x.dict.yaml
+#### 4.2.1.3 *.dict.yaml
 
 修改`hello.schema.yaml`文件。
 
@@ -143,11 +143,11 @@ sort: original
 
 现在`大家好`这个方案，实现了输入法的基本功能。
 
-4.2.1.4 组件
+#### 4.2.1.4 组件
 
 组件含义，参见`https://github.com/LEOYoon-Tsaw/Rime_collections/blob/master/Rime_description.md`。
 
-可以观察到，中州韵输入法引擎，是在`x.schema.yaml`文件里添加`组件`，实现输入法功能的。
+可以观察到，中州韵输入法引擎，是在`*.schema.yaml`文件里添加`组件`，实现输入法功能的。
 
 例如，想要实现数字键选择候选字词，在如下位置添加`selector`组件，即可实现。
 
@@ -202,7 +202,7 @@ punctuator:             # 設定符號表，這裏直接導入預設的
   import_preset: default
 ```
 
-4.2.1.5 打包输入法
+#### 4.2.1.5 打包输入法
 
 将编辑好的`hello.schema.yaml`和`hello.dict.yaml`文件，保存到`/weasel/output/data`文件夹。
 
@@ -214,7 +214,7 @@ punctuator:             # 設定符號表，這裏直接導入預設的
 build installer
 ```
 
-编译后，会在/weasel/output/archives文件夹，生成weasel-x.x.x.x-installer.exe小狼毫安装程序。
+编译后，会在/weasel/output/archives文件夹，生成weasel-*.*.*.*-installer.exe小狼毫安装程序。
 
 卸载已安装的小狼毫输入法，安装新生成的安装程序。
 如图所示，本小节编辑的输入法已打包到了安装程序中。
