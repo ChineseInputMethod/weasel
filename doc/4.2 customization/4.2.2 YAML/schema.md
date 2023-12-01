@@ -25,9 +25,9 @@
 
 ```
 schema:
-  name: 大家好           # 將在〔方案選單〕中顯示
-  schema_id: hello      # 注意此ID與文件名裏 .schema.yaml 之前的部分相同
-  version: "5"          # 這是文字類型而非整數或小數，如 "1.2.3"
+  name: 大家好            # 將在〔方案選單〕中顯示
+  schema_id: hello       # 注意此ID與文件名裏 .schema.yaml 之前的部分相同
+  version: "5"           # 這是文字類型而非整數或小數，如 "1.2.3"
 ```
 
 在上面的代码中，`name`、`schema_id`、`version`为同一层级，均在`schema`层级下。
@@ -43,16 +43,63 @@ schema:
 `name`是键，`大家好`是键映射的值，`: `是键与值之间的分隔符。
 
 ```
-  name: 大家好           # 將在〔方案選單〕中顯示
-  schema_id: hello      # 注意此ID與文件名裏 .schema.yaml 之前的部分相同
-  version: "5"          # 這是文字類型而非整數或小數，如 "1.2.3"
+  name: 大家好            # 將在〔方案選單〕中顯示
+  schema_id: hello       # 注意此ID與文件名裏 .schema.yaml 之前的部分相同
+  version: "5"           # 這是文字類型而非整數或小數，如 "1.2.3"
 ```
 
 上面的代码，包含了三个键值对。值可以是原始数据类型，例如字符串，整数，布尔值等等。也可以是复合数据类型。
 
 ```
 schema:
-  name: 大家好           # 將在〔方案選單〕中顯示
-  schema_id: hello      # 注意此ID與文件名裏 .schema.yaml 之前的部分相同
-  version: "5"          # 這是文字類型而非整數或小數，如 "1.2.3"
+  name: 大家好            # 將在〔方案選單〕中顯示
+  schema_id: hello       # 注意此ID與文件名裏 .schema.yaml 之前的部分相同
+  version: "5"           # 這是文字類型而非整數或小數，如 "1.2.3"
 ```
+
+例如上面的代码，键`schema`的值是三个键值对。
+
+#### 4.2.2.4 列表
+
+`-`减号后跟一个` `空格，然后跟一个内容，被称为数组，也就是数据结构中的列表。
+
+```
+  processors:
+    - speller            # 把字母追加到編碼串
+    - punctuator         # 處理符號按鍵
+    - selector           # 選字、換頁
+    - express_editor     # 空格確認當前輸入、其他字符直接上屏
+```
+
+上面的代码中，键`processors`的值是一个列表，列表包含了四个元素。
+在其他教程中，上面的代码也被解释为，`processors`是一个包含了四个元素的数组。
+
+列表的另一种书写格式为：[元素1,元素2,元素3]。
+下面的代码含义与上面的代码是等价的。
+
+```
+  processors: [speller,punctuator,selector,express_editor]
+```
+
+列表有两种书写方式，是为了方便阅读。（映射也有另外一种书写方式，本教程不涉及此格式）
+
+```
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [中文,西文]
+  - name: full_shape
+    states: [半角,全角]
+  - name: simplification # 轉換開關
+    states: [漢字,汉字]
+```
+
+例如上面的代码，键`switches`的值是一个包含了三个元素的列表。第一个元素包含了三个映射，其中第三个映射`states`的值是一个包含了两个元素的列表`中文,西文`。
+在涉及到列表镶套的场景里，这种书写方式，更方便阅读。
+
+上面的代码在rime里的含义是，`switches`被称为开关档，这里包含了一些输入法设置开关，可以切换输入法状态。
+切换到小狼毫输入法，按下`Ctrl`+```键，如下图所示，该设置实现了传统输入法的状态条功能。
+
+![switch](switch.png)
+
+#### 4.2.2.5
