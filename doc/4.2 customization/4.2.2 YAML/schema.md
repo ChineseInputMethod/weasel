@@ -102,4 +102,97 @@ switches:
 
 ![switch](switch.png)
 
-#### 4.2.2.5
+#### 4.2.2.5 文档
+
+在Yaml中三个减号`---`的含义是标记文档的开始，三个句点`...`的含义是标记文档的结尾。
+在Rime中`---`和`...`用于标记词典文件的词典配置。
+
+```
+---
+name: hello
+version: "2"
+sort: original
+...
+```
+
+上面的代码含义是`---`和`...`之间是词典的配置内容。`...`之后是码表。
+
+下面是本小节`hello.dict.yaml`文件的完整内容。
+
+```
+# Rime dictionary
+# encoding: utf-8
+
+---
+name: hello
+version: "2"
+sort: by_weight
+...
+
+大家好	hello
+再見	bye
+再會	bye
+
+星期一	monday
+星期二	tuesday
+星期三	wednesday
+星期四	thursday
+星期五	friday
+星期六	saturday
+星期日	sunday
+
+星期一	weekday
+星期二	weekday
+星期三	weekday
+星期四	weekday
+星期五	weekday
+星期六	weekday
+星期日	weekday
+```
+
+下面是本小节`hello.schema.yaml`文件的完整内容。
+
+```
+# Rime schema
+# encoding: utf-8
+#
+# 最簡單的 Rime 輸入方案
+#
+
+schema:
+  name: 大家好            # 將在〔方案選單〕中顯示
+  schema_id: hello       # 注意此ID與文件名裏 .schema.yaml 之前的部分相同
+  version: "5"           # 這是文字類型而非整數或小數，如 "1.2.3"
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [中文,西文]
+  - name: full_shape
+    states: [半角,全角]
+  - name: simplification # 轉換開關
+    states: [漢字,汉字]
+    
+engine:
+  processors:
+    - speller            # 把字母追加到編碼串
+    - punctuator         # 處理符號按鍵
+    - selector           # 選字、換頁
+    - express_editor     # 空格確認當前輸入、其他字符直接上屏
+  segmentors:
+    - abc_segmentor      # 標記輸入碼的類型
+    - punct_segmentor    # 劃界，與前後方的其他編碼區分開
+  translators:
+    - echo_translator    # （無有其他結果時，）創建一個與編碼串一個模樣的候選項
+    - punct_translator   # 轉換
+    - script_translator  # 腳本翻譯器
+
+translator:
+  dictionary: hello      # 設定 script_translator 使用的詞典名
+  
+punctuator:              # 設定符號表，這裏直接導入預設的
+  import_preset: default
+```
+
+将`hello.schema.yaml`和`hello.dict.yaml`文件保存到`用户文件夹`。
+在`输入法设定`中选中`大家好`，即可测试本小节编辑的输入法方案。
