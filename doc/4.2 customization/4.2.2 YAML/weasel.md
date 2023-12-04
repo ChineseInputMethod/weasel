@@ -1,4 +1,4 @@
-### 4.2.2 [YAML](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.2%20customization/4.2.2%20YAML/schema.md)
+### 4.2.2 [YAML](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.2%20customization/4.2.2%20YAML/weasel.md)
 
 本小节讲解YAML基本语法，完善“大家好”这个输入法方案。
 
