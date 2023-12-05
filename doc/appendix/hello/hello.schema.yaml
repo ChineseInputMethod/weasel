@@ -1,0 +1,30 @@
+# Rime schema
+# encoding: utf-8
+#
+# 最簡單的 Rime 輸入方案
+#
+
+schema:
+  name: 大家好			# 方案名称
+  schema_id: hello		# 方案标识符
+  author:
+    - 制作人：一条不会游泳的鱼	# 作者
+  dependencies:
+    - bopomofo			# 依赖项
+  description: 
+    一个全拼输入法		# 描述信息
+  version: ”6“			# 版本号
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: ["中文", "西文"]
+  - name: full_shape
+    states: ["半角", "全角"]
+  - name: extended_charset
+    states: ["通用", "增廣"]
+  - name: simplification
+    reset: 1
+    states: ["漢字", "汉字"]
+  - name: ascii_punct
+    states: ["句讀", "符號"]
