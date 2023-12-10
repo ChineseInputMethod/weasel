@@ -52,36 +52,86 @@ switches:
 `processors`节点是其中的按键处理部分，当用户按下编码键后，通过`processors`节点的配置，rime进行按键处理。
 
 ```
-engine:
-  processors:
-    - ascii_composer #處理西文模式
-    - recognizer     #與matcher搭配
-    - key_binder     #將按鍵綁定到其他按鍵
+engine:                    # 輸入引擎設定，即掛接組件的「處方」
+  processors:              # 一、這批組件處理各類按鍵消息
+    - ascii_composer       # ※ 處理西文模式及中西文切換
+    - recognizer           # ※ 與 matcher 搭配，處理符合特定規則的輸入碼，如網址、反查等
+    - key_binder           # ※ 在特定條件下將按鍵綁定到其他按鍵，如重定義逗號、句號爲候選翻頁鍵
       import_preset: default #格式一
-    - speller        #拼寫處理器
-    - punctuator     #句讀處理器
-    - selector       #選字處理器
-    - navigator      #處理輸入欄內的光標移動
-    - express_editor #處理空格、回車上屏
+    - speller              # ※ 拼寫處理器，接受字符按鍵，編輯輸入碼
+    - punctuator           # ※ 句讀處理器，將單個字符按鍵直接映射爲文字符號
+    - selector             # ※ 選字處理器，處理數字選字鍵、上、下候選定位、換頁鍵
+    - navigator            # ※ 處理輸入欄內的光標移動鍵
+    - express_editor       # ※ 編輯器，處理空格、回車上屏、回退鍵等
 ```
 
 上面的代码通过`key_binder`按键绑定组件，实现了逗号键和句号键翻页功能。
 为了避免过多的节点镶套，上面的代码更多的写成下面的形式。
 
 ```
-engine:
-  processors:
-    - ascii_composer #處理西文模式
-    - recognizer     #與matcher搭配
-    - key_binder     #將按鍵綁定到其他按鍵
-    - speller        #拼寫處理器
-    - punctuator     #句讀處理器
-    - selector       #選字處理器
-    - navigator      #處理輸入欄內的光標移動
-    - express_editor #處理空格、回車上屏
+engine:                    # 輸入引擎設定，即掛接組件的「處方」
+  processors:              # 一、這批組件處理各類按鍵消息
+    - ascii_composer       # ※ 處理西文模式及中西文切換
+    - recognizer           # ※ 與 matcher 搭配，處理符合特定規則的輸入碼，如網址、反查等
+    - key_binder           # ※ 在特定條件下將按鍵綁定到其他按鍵，如重定義逗號、句號爲候選翻頁鍵
+    - speller              # ※ 拼寫處理器，接受字符按鍵，編輯輸入碼
+    - punctuator           # ※ 句讀處理器，將單個字符按鍵直接映射爲文字符號
+    - selector             # ※ 選字處理器，處理數字選字鍵、上、下候選定位、換頁鍵
+    - navigator            # ※ 處理輸入欄內的光標移動鍵
+    - express_editor       # ※ 編輯器，處理空格、回車上屏、回退鍵等
 
-key_binder:          #`key_binder`组件的详细配置
+key_binder:                #格式二
   import_preset: default
 ```
 
 两种格式在功能上是完全等价的，之所以建议写成后一种格式，是因为在实际应用中详细配置往往非常复杂，并非样例这样只有一条语句。
+
+#### 4.2.3.4 segmentors
+
+当用户按下若干按键后，由`processors`节点进行编码串的切分。
+例如用户输入`hello@rime`，编码串会被切分成三部分：`hello`、`@`、`rime`，既`字母段`、`符号段`、`字母段`，标识为`abc`、`punct`、`abc`。
+
+```
+engine:                    # 輸入引擎設定，即掛接組件的「處方」
+  segmentors:              # 二、這批組件識別不同內容類型，將輸入碼分段
+    - ascii_segmentor      # ※ 標識西文段落
+    - matcher              # ※ 標識符合特定規則的段落，如網址、反查等
+    - abc_segmentor        # ※ 標識常規的文字段落
+    - punct_segmentor      # ※ 標識句讀段落
+    - fallback_segmentor   # ※ 標識其他未標識段落
+```
+
+以下代码为`abc`标签附加了`reverse_lookup`标签，即字母段也被切分成`reverse_lookup`编码反查段。
+
+```
+abc_segmentor:
+  extra_tags:
+    - reverse_lookup  #编码反查
+```
+
+然后添加`reverse_lookup_translator`组件。
+
+```
+engine:
+  translators:
+    - reverse_lookup_translator #反查翻譯器，用另一種編碼方案查碼
+```
+
+最后配置`reverse_lookup`组件。
+
+```
+reverse_lookup:            #配置编码查询组件
+  dictionary: stroke       #笔画输入法码表
+  enable_completion: true  #提前顯示尚未輸入完整碼的字
+  prefix: "`"              #前缀
+  suffix: "'"              #分隔符
+  tips: 〔筆畫〕
+  preedit_format:
+    - xlit/hspnz/一丨丿丶乙/
+  comment_format:
+    - xform/([nl])v/$1ü/
+```
+
+完成以上设置后，就可以按下`·`键，使用`hspnz`进行笔画输入，也可以直接进行笔画输入。
+
+#### 4.2.3.5 translators
