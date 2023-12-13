@@ -49,7 +49,7 @@ engine:                    # 輸入引擎設定，即掛接組件的「處方」
     - echo_translator      # ※ 沒有其他候選字時，回顯輸入碼
     - punct_translator     # ※ 轉換標點符號
     - script_translator    # ※ 腳本翻譯器，用於拼音等基於音節表的輸入方案
-    - reverse_lookup_translator  # ※ 反查翻譯器，用另一種編碼方案查碼
+    - table_translator@reverse_lookup # ※  碼表翻譯器
   filters:                 # 四、這批組件過濾翻譯的結果
     - simplifier           # ※ 繁簡轉換
     - uniquifier           # ※ 過濾重複的候選字，有可能來自繁簡轉換
@@ -59,10 +59,6 @@ key_binder:          #`key_binder`组件的详细配置
 
 punctuator:          #`punctuator`组件的详细配置
   import_preset: symbols
-
-abc_segmentor:
-  extra_tags:
-    - reverse_lookup #编码反查
 
 reverse_lookup:            #配置编码查询组件
   dictionary: stroke       #笔画输入法码表
