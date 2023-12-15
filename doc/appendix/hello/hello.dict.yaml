@@ -2,10 +2,10 @@
 # encoding: utf-8
 
 ---
-name: hello
-version: "3"
-sort: by_weight
-use_preset_vocabulary: true
-import_tables:
+name: hello                 #內部字典名
+version: "3"                #字典版本號
+sort: by_weight             #字典初始排序
+use_preset_vocabulary: true #是否使用八股文
+import_tables:              #加載其它外部碼表
   - hello/character
 ...

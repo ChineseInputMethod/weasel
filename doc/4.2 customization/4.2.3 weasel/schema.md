@@ -188,7 +188,7 @@ rime引擎会同时在两个翻译器中查找编码所对应的汉字，从而�
 
 #### 4.2.3.6 filters
 
-当完成从编码到汉字的转换后，rime引擎还完成一些收尾工作。
+当完成从编码到汉字的转换后，在`filters`节点中完成一些收尾工作。
 
 ```
 engine:                    # 輸入引擎設定，即掛接組件的「處方」
@@ -200,3 +200,31 @@ engine:                    # 輸入引擎設定，即掛接組件的「處方」
 以上代码实现了简繁转换功能。
 
 #### 4.2.3.7 dict
+
+翻译器需要加载词典，完成从编码到汉字的翻译。
+
+```
+translator:
+  dictionary: hello  # 設定 script_translator 使用的詞典名
+```
+
+以上代码加载`hello.dict.yaml`文件。`*.dict.yaml`是输入法的码表文件。
+
+```
+# Rime dictionary
+# encoding: utf-8
+
+---
+name: hello                 #內部字典名
+version: "3"                #字典版本號
+sort: by_weight             #字典词频排序
+use_preset_vocabulary: true #是否使用八股文
+import_tables:              #加載其它外部碼表
+  - hello/character
+...
+```
+
+以上代码与其他方案稍微有所不同。我将具体码表放在了子文件夹中，然后在主码表中加载子文件夹中的外部码表。
+这么做的目的是为了方便以后扩充词库。
+
+请将[附录 A](https://github.com/ChineseInputMethod/weasel/tree/master/doc/appendix/hello)中，`hello.schema.yaml`、`hello.dict.yaml`以及子文件夹`hello`复制到用户文件夹，查看演示效果。
