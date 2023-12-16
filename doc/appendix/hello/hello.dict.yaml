@@ -4,7 +4,7 @@
 ---
 name: hello                 #內部字典名
 version: "3"                #字典版本號
-sort: by_weight             #字典初始排序
+sort: by_weight             #字典词频排序
 use_preset_vocabulary: true #是否使用八股文
 import_tables:              #加載其它外部碼表
   - hello/character

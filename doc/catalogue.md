@@ -15,3 +15,5 @@
 ### 4.2.2 [yaml](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.2%20customization/4.2.2%20yaml/weasel.md)
 
 ### 4.2.3 [weasel](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.2%20customization/4.2.3%20weasel/schema.md)
+
+### 4.2.4 [regex](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.2%20customization/4.2.4%20regex/custom.md)
