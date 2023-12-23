@@ -118,7 +118,7 @@ reverse_lookup:
   dictionary: cangjie5
   prefix: "`"
   tips: 〔倉頡〕
-  preedit_format:
+  preedit_format:        #回显输入编码
     - "xlit|abcdefghijklmnopqrstuvwxyz|日月金木水火土竹戈十大中一弓人心手口尸廿山女田難卜符|"
   comment_format:
     - xform/([nl])v/$1ü/
