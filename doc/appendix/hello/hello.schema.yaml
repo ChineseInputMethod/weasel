@@ -13,7 +13,7 @@ schema:
     - bopomofo			# 依赖项
   description: 
     一个全拼输入法		# 描述信息
-  version: ”6“			# 版本号
+  version: "6"			# 版本号
 
 switches:
   - name: ascii_mode        #中英文轉換開關

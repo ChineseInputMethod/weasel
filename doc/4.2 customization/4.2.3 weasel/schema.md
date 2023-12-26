@@ -19,7 +19,7 @@ schema:
     - bopomofo			# 依赖项
   description: 
     一个全拼输入法		# 描述信息
-  version: ”6“			# 版本号
+  version: "6"			# 版本号
 ```
 
 >版本号要用单引号或双引号，因为rime使用字符串处理版本号。
