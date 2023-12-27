@@ -156,3 +156,65 @@ translator:
 但rime是个平台，可能包含了多人协作的多种方案。使用拼写运算，其一，利于共享成果。其二，方便修改方案。
 
 #### 4.2.4.5 双拼方案
+
+在`algebra`节点中包含若干拼写运算，rime通过拼写运算将双拼编码映射到全拼词库上。从而将“大家好”这个全拼输入法，衍生出一个双拼输入法。
+
+`erase/^xx$/`删除无关音节。`derive/^([jqxy])u$/$1v/`设置容错码。
+
+```
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba  # 呃，倒背字母表完全是個人喜好
+  delimiter: " '"  # 隔音符號用「'」；第一位的空白用來自動插入到音節邊界處
+  algebra:  # 拼寫運算規則，這個纔是實現雙拼方案的重點。寫法有很多種，當然也可以把四百多個音節碼一條一條地列舉
+    - erase/^xx$/             # 碼表中有幾個拼音不明的字，編碼成xx了，消滅他
+    - derive/^([jqxy])u$/$1v/
+```
+
+处理声母。
+
+```
+    - xform/^zh/A/            # 替換聲母鍵，用大寫以防與原有的字母混淆
+    - xform/^ch/E/
+    - xform/^sh/V/
+```
+
+处理零声母。
+
+```
+    - xform/^([aoe].*)$/O$1/  # 添上固定的零聲母o，先標記爲大寫O
+```
+
+处理韵母。竖线|在正则表达式中是或匹配的意思。`in$|uai$`其含义是匹配in或匹配uai。
+问号?的含义是重复前一个匹配0次或1次。`i?ong$`其含义是匹配`ong$`和`iong$`。
+
+```
+    - xform/ei$/Q/            # 替換韻母鍵
+    - xform/ian$/W/           # ※2
+    - xform/er$|iu$/R/        # 對應兩種韻母的；音節er現在變爲OR了
+    - xform/[iu]ang$/T/       # ※1
+    - xform/ing$/Y/
+    - xform/uo$/O/
+    - xform/uan$/P/           # ※3
+    - xform/i?ong$/S/
+    - xform/[iu]a$/D/
+    - xform/en$/F/
+    - xform/eng$/G/
+    - xform/ang$/H/           # 檢查一下在此之前是否已轉換過了帶介音的ang；好，※1處有了
+    - xform/an$/J/            # 如果※2、※3還無有出現在上文中，應該把他們提到本行之前
+    - xform/iao$/Z/           # 對——像這樣讓iao提前出場
+    - xform/ao$/K/
+    - xform/in$|uai$/C/       # 讓uai提前出場
+    - xform/ai$/L/
+    - xform/ie$/X/
+    - xform/ou$/B/
+    - xform/un$/N/
+    - xform/[uv]e$|ui$/M/
+```
+
+生成双拼方案编码。
+
+```
+    - xlit/QWERTYOPASDFGHJKLZXCVBNM/qwertyopasdfghjklzxcvbnm/  # 最後把雙拼碼全部變小寫
+```
+
+#### 4.2.4.6 

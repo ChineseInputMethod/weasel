@@ -7,6 +7,9 @@ schema:
   version: "0.9"
   author:
     - 佛振 <chen.sst@gmail.com>
+  dependencies:
+    - hello			# 依赖项
+    - cangjie5			# 依赖项
   description: |
     朙月拼音，兼容智能ABC雙拼方案。
 
