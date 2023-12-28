@@ -217,4 +217,22 @@ speller:
     - xlit/QWERTYOPASDFGHJKLZXCVBNM/qwertyopasdfghjklzxcvbnm/  # 最後把雙拼碼全部變小寫
 ```
 
-#### 4.2.4.6 
+#### 4.2.4.6 部署
+
+在`dependencies`节点添加依赖项，这样可以不显式部署大家好和仓颉输入法，自动在build文件夹中生成相关文件。
+
+```
+schema:
+  schema_id: double_pinyin_abc  # 專有的方案標識
+  name: 智能ABC雙拼
+  version: "0.9"
+  author:
+    - 佛振 <chen.sst@gmail.com>
+  dependencies:
+    - hello			# 依赖项
+    - cangjie5			# 依赖项
+```
+
+将[附录 A](https://github.com/ChineseInputMethod/weasel/tree/master/doc/appendix/hello)中，所有文件以及子文件夹复制到用户文件夹，部署输入法查看演示效果。
+
+#### 4.2.4.7 
