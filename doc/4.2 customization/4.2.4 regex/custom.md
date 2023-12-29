@@ -235,4 +235,15 @@ schema:
 
 将[附录 A](https://github.com/ChineseInputMethod/weasel/tree/master/doc/appendix/hello)中，所有文件以及子文件夹复制到用户文件夹，部署输入法查看演示效果。
 
-#### 4.2.4.7 
+#### 4.2.4.7 定制
+
+`*.custom.yaml`是输入法的定制文件。
+rime是自由度最高的输入法平台，有很多爱好者制作了各种定制文件。
+这些定制文件分为三类。第一种是像本小节一样，扩展修订已有的编码方案；第二种是扩充分类词库；第三种是美化输入法样式。
+
+```
+patch:
+  "style/color_scheme": google
+```
+
+以上代码更改了输入法样式。更多内容请参考官方网站。
