@@ -22,7 +22,7 @@ if %build_installer% == 1 (
 
 `install.nsi`在`weasel/output`文件夹中。详细说明请参考相关教程，这里只对关键内容进行简要说明。
 
-脚本开始定义了变量和属性。
+脚本开始进行了一些初始设置。
 
 ```bash
 ; weasel installation script
@@ -136,4 +136,51 @@ LangString LNKFORAPPFOLDER ${LANG_ENGLISH} "[Weasel] App Folder"
 LangString LNKFORUPDATER ${LANG_ENGLISH} "[Weasel] Check for Updates"
 LangString LNKFORSETUP ${LANG_ENGLISH} "[Weasel] Installation Preference"
 LangString LNKFORUNINSTALL ${LANG_ENGLISH} "Uninstall Weasel"
+```
+
+#### 4.3.1.2 .onInit函数
+
+在安装页面显示之前，会先调用.onInit函数。
+在.onInit函数中，通过读取注册表项检查是否已安装过输入法。
+
+```bash
+Function .onInit
+  ReadRegStr $R0 HKLM \
+  "Software\Microsoft\Windows\CurrentVersion\Uninstall\Weasel" \
+  "UninstallString"
+  StrCmp $R0 "" done
+```
+
+如果已安装过输入法，弹出窗口，提示用户先卸载已有版本输入法。
+
+```bash
+  StrCpy $0 "Upgrade"
+  IfSilent uninst 0
+  MessageBox MB_OKCANCEL|MB_ICONINFORMATION \
+  "安裝前，我打盤先卸載舊版本的小狼毫。$\n$\n按下「確定」移除舊版本，按下「取消」放棄本次安裝。" \
+  IDOK uninst
+  Abort
+```
+
+备份已有版本安装的输入方案。
+
+```bash
+uninst:
+  ; Backup data directory from previous installation, user files may exist
+  ReadRegStr $R1 HKLM SOFTWARE\Rime\Weasel "WeaselRoot"
+  StrCmp $R1 "" call_uninstaller
+  IfFileExists $R1\data\*.* 0 call_uninstaller
+  CreateDirectory $TEMP\weasel-backup
+  CopyFiles $R1\data\*.* $TEMP\weasel-backup
+```
+
+静默运行`uninstall.exe`。
+
+```bash
+call_uninstaller:
+  ExecWait '$R0 /S'
+  Sleep 800
+
+done:
+FunctionEnd
 ```
