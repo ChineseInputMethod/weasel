@@ -184,3 +184,144 @@ call_uninstaller:
 done:
 FunctionEnd
 ```
+
+#### 4.3.1.3 Weasel区段
+
+安装程序在`Weasel`区段，完成安装输入法的核心工作。
+首先停用`WeaselServer.exe`服务，然后复制备份已安装过的输入方案文件。
+
+```bash
+; The stuff to install
+Section "Weasel"
+
+  SectionIn RO
+
+  ; Write the new installation path into the registry
+  WriteRegStr HKLM SOFTWARE\Rime\Weasel "InstallDir" "$INSTDIR"
+
+  ; Reset INSTDIR for the new version
+  StrCpy $INSTDIR "${WEASEL_ROOT}"
+
+  IfFileExists "$INSTDIR\WeaselServer.exe" 0 +2
+  ExecWait '"$INSTDIR\WeaselServer.exe" /quit'
+
+  SetOverwrite try
+  ; Set output path to the installation directory.
+  SetOutPath $INSTDIR
+
+  IfFileExists $TEMP\weasel-backup\*.* 0 program_files
+  CreateDirectory $INSTDIR\data
+  CopyFiles $TEMP\weasel-backup\*.* $INSTDIR\data
+  RMDir /r $TEMP\weasel-backup
+```
+
+然后释放程序和数据文件到`$INSTDIR`目录。
+
+```bash
+program_files:
+  File "LICENSE.txt"
+  File "README.txt"
+  File "7-zip-license.txt"
+  File "7z.dll"
+  File "7z.exe"
+  File "COPYING-curl.txt"
+  File "curl.exe"
+  File "curl-ca-bundle.crt"
+  File "rime-install.bat"
+  File "rime-install-config.bat"
+  File "start_service.bat"
+  File "stop_service.bat"
+  File "weasel.dll"
+  ${If} ${RunningX64}
+    File "weaselx64.dll"
+  ${EndIf}
+  File "weaselt.dll"
+  ${If} ${RunningX64}
+    File "weaseltx64.dll"
+  ${EndIf}
+  File "weasel.ime"
+  ${If} ${RunningX64}
+    File "weaselx64.ime"
+  ${EndIf}
+  File "weaselt.ime"
+  ${If} ${RunningX64}
+    File "weaseltx64.ime"
+  ${EndIf}
+  File "WeaselDeployer.exe"
+  File "WeaselServer.exe"
+  File "WeaselSetup.exe"
+  File "rime.dll"
+  File "WinSparkle.dll"
+  ; shared data files
+  SetOutPath $INSTDIR\data
+  File "data\*.yaml"
+  File /nonfatal "data\*.txt"
+  File /nonfatal "data\*.gram"
+  ; opencc data files
+  SetOutPath $INSTDIR\data\opencc
+  File "data\opencc\*.json"
+  File "data\opencc\*.ocd*"
+  ; images
+  SetOutPath $INSTDIR\data\preview
+  File "data\preview\*.png"
+```
+
+然后运行`WeaselSetup.exe`，安装输入法。
+
+```bash
+  SetOutPath $INSTDIR
+
+  ; test /T flag for zh_TW locale
+  StrCpy $R2  "/i"
+  ${GetParameters} $R0
+  ClearErrors
+  ${GetOptions} $R0 "/S" $R1
+  IfErrors +2 0
+  StrCpy $R2 "/s"
+  ${GetOptions} $R0 "/T" $R1
+  IfErrors +2 0
+  StrCpy $R2 "/t"
+
+  ExecWait '"$INSTDIR\WeaselSetup.exe" $R2'
+```
+
+生成卸载程序`uninstall.exe`。
+
+```bash
+  ; Write the uninstall keys for Windows
+  WriteRegStr HKLM "${REG_UNINST_KEY}" "DisplayName" "$(DISPLAYNAME)"
+  WriteRegStr HKLM "${REG_UNINST_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegStr HKLM "${REG_UNINST_KEY}"  "DisplayVersion" "${WEASEL_VERSION}.${WEASEL_BUILD}"
+  WriteRegStr HKLM "${REG_UNINST_KEY}"  "Publisher" "式恕堂"
+  WriteRegStr HKLM "${REG_UNINST_KEY}"  "URLInfoAbout" "https://rime.im/"
+  WriteRegStr HKLM "${REG_UNINST_KEY}"  "HelpLink" "https://rime.im/docs/"
+  WriteRegDWORD HKLM "${REG_UNINST_KEY}" "NoModify" 1
+  WriteRegDWORD HKLM "${REG_UNINST_KEY}" "NoRepair" 1
+  WriteUninstaller "$INSTDIR\uninstall.exe"
+```
+
+运行`WeaselDeployer.exe`，在用户文件夹生成输入法方案文件。
+
+```bash
+  ; run as user...
+  ExecWait "$INSTDIR\WeaselDeployer.exe /install"
+```
+
+启动`WeaselServer.exe`服务。
+
+```bash
+  ; Write autorun key
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Run" "WeaselServer" "$INSTDIR\WeaselServer.exe"
+  ; Start WeaselServer
+  Exec "$INSTDIR\WeaselServer.exe"
+```
+
+若已安装过输入法，则设置为需重新启动系统。
+
+```bash
+  ; Prompt reboot
+  StrCmp $0 "Upgrade" 0 +2
+  SetRebootFlag true
+
+SectionEnd
+```
