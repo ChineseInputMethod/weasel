@@ -2,7 +2,7 @@
 
 在`weasel/build.bat`文件最后，会调用NSIS将编译后的文件，打包成输入法安装程序。
 
-```bash
+```NSIS
 if %build_installer% == 1 (
   "%ProgramFiles(x86)%"\NSIS\Bin\makensis.exe ^
   /DWEASEL_VERSION=%WEASEL_VERSION% ^
@@ -24,7 +24,7 @@ if %build_installer% == 1 (
 
 脚本开始进行了一些初始设置。
 
-```bash
+```NSIS
 ; weasel installation script
 !include FileFunc.nsh
 !include LogicLib.nsh
@@ -77,7 +77,7 @@ RequestExecutionLevel admin
 
 然后设置了四个安装页面和三个卸载页面。
 
-```bash
+```NSIS
 ; Pages
 
 !insertmacro MUI_PAGE_LICENSE "LICENSE.txt"
@@ -92,7 +92,7 @@ RequestExecutionLevel admin
 
 接着设置了多语言开始菜单。
 
-```bash
+```NSIS
 ; Languages
 
 !insertmacro MUI_LANGUAGE "TradChinese"
@@ -143,7 +143,7 @@ LangString LNKFORUNINSTALL ${LANG_ENGLISH} "Uninstall Weasel"
 在安装页面显示之前，会先调用.onInit函数。
 在.onInit函数中，通过读取注册表项检查是否已安装过输入法。
 
-```bash
+```NSIS
 Function .onInit
   ReadRegStr $R0 HKLM \
   "Software\Microsoft\Windows\CurrentVersion\Uninstall\Weasel" \
@@ -153,7 +153,7 @@ Function .onInit
 
 如果已安装过输入法，弹出窗口，提示用户先卸载已有版本输入法。
 
-```bash
+```NSIS
   StrCpy $0 "Upgrade"
   IfSilent uninst 0
   MessageBox MB_OKCANCEL|MB_ICONINFORMATION \
@@ -164,7 +164,7 @@ Function .onInit
 
 备份已有版本安装的输入方案。
 
-```bash
+```NSIS
 uninst:
   ; Backup data directory from previous installation, user files may exist
   ReadRegStr $R1 HKLM SOFTWARE\Rime\Weasel "WeaselRoot"
@@ -176,7 +176,7 @@ uninst:
 
 静默运行`uninstall.exe`。
 
-```bash
+```NSIS
 call_uninstaller:
   ExecWait '$R0 /S'
   Sleep 800
@@ -190,7 +190,7 @@ FunctionEnd
 安装程序在`Weasel`区段，完成安装输入法的核心工作。
 首先停用`WeaselServer.exe`服务，然后复制备份已安装过的输入方案文件。
 
-```bash
+```NSIS
 ; The stuff to install
 Section "Weasel"
 
@@ -217,7 +217,7 @@ Section "Weasel"
 
 然后释放程序和数据文件到`$INSTDIR`目录。
 
-```bash
+```NSIS
 program_files:
   File "LICENSE.txt"
   File "README.txt"
@@ -268,7 +268,7 @@ program_files:
 
 然后运行`WeaselSetup.exe`，安装输入法。
 
-```bash
+```NSIS
   SetOutPath $INSTDIR
 
   ; test /T flag for zh_TW locale
@@ -287,7 +287,7 @@ program_files:
 
 生成卸载程序`uninstall.exe`。
 
-```bash
+```NSIS
   ; Write the uninstall keys for Windows
   WriteRegStr HKLM "${REG_UNINST_KEY}" "DisplayName" "$(DISPLAYNAME)"
   WriteRegStr HKLM "${REG_UNINST_KEY}" "UninstallString" '"$INSTDIR\uninstall.exe"'
@@ -302,14 +302,14 @@ program_files:
 
 运行`WeaselDeployer.exe`，在用户文件夹生成输入法方案文件。
 
-```bash
+```NSIS
   ; run as user...
   ExecWait "$INSTDIR\WeaselDeployer.exe /install"
 ```
 
 启动`WeaselServer.exe`服务。
 
-```bash
+```NSIS
   ; Write autorun key
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Run" "WeaselServer" "$INSTDIR\WeaselServer.exe"
   ; Start WeaselServer
@@ -318,7 +318,7 @@ program_files:
 
 若已安装过输入法，则设置为需重新启动系统。
 
-```bash
+```NSIS
   ; Prompt reboot
   StrCmp $0 "Upgrade" 0 +2
   SetRebootFlag true
@@ -346,6 +346,56 @@ Section "Start Menu Shortcuts"
   CreateShortCut "$SMPROGRAMS\$(DISPLAYNAME)\$(LNKFORUPDATER).lnk" "$INSTDIR\WeaselServer.exe" "/update" "$SYSDIR\shell32.dll" 13
   CreateShortCut "$SMPROGRAMS\$(DISPLAYNAME)\$(LNKFORSETUP).lnk" "$INSTDIR\WeaselSetup.exe" "" "$SYSDIR\shell32.dll" 162
   CreateShortCut "$SMPROGRAMS\$(DISPLAYNAME)\$(LNKFORUNINSTALL).lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+
+SectionEnd
+```
+
+#### 4.3.1.5 Uninstall区段
+
+停用`WeaselServer.exe`，卸载输入法。
+
+```NSIS
+; Uninstaller
+
+Section "Uninstall"
+
+  ExecWait '"$INSTDIR\WeaselServer.exe" /quit'
+
+  ExecWait '"$INSTDIR\WeaselSetup.exe" /u'
+```
+
+删除注册表项。
+
+```NSIS
+  ; Remove registry keys
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Weasel"
+  DeleteRegValue HKLM "Software\Microsoft\Windows\CurrentVersion\Run" "WeaselServer"
+  DeleteRegKey HKLM SOFTWARE\Rime
+```
+
+删除文件。
+
+```NSIS
+  ; Remove files and uninstaller
+  SetOutPath $TEMP
+  Delete /REBOOTOK "$INSTDIR\data\opencc\*.*"
+  Delete /REBOOTOK "$INSTDIR\data\preview\*.*"
+  Delete /REBOOTOK "$INSTDIR\data\*.*"
+  Delete /REBOOTOK "$INSTDIR\*.*"
+  RMDir /REBOOTOK "$INSTDIR\data\opencc"
+  RMDir /REBOOTOK "$INSTDIR\data\preview"
+  RMDir /REBOOTOK "$INSTDIR\data"
+  RMDir /REBOOTOK "$INSTDIR"
+  SetShellVarContext all
+  Delete /REBOOTOK "$SMPROGRAMS\$(DISPLAYNAME)\*.*"
+  RMDir /REBOOTOK "$SMPROGRAMS\$(DISPLAYNAME)"
+```
+
+重启系统，完成卸载。
+
+```NSIS
+  ; Prompt reboot
+  SetRebootFlag true
 
 SectionEnd
 ```
