@@ -14,4 +14,4 @@ Project							|Description
 -|-
 [WeaselSetup][1]				|安装输入法。
 
-[1]: https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/Setup.md
+[1]: https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/install.md

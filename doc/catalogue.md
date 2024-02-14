@@ -18,6 +18,8 @@
 
 ### 4.2.4 [regex](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.2%20customization/4.2.4%20regex/custom.md)
 
-## 4.3 [安装输入法](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/Setup.md)
+## 4.3 [安装输入法](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/install.md)
 
 ### 4.3.1 [NSIS](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/4.3.1%20installation/script.md)
+
+### 4.3.2 [Setup](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/4.3.2%20Setup/WeaselSetup.cpp.md)
