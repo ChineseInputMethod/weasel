@@ -1,4 +1,4 @@
-### 4.3.1 [NSIS](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/4.3.1%20installation/script.md)
+### 4.3.1 [NSIS](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/4.3.1%20installation/install.nsi.md)
 
 在`weasel/build.bat`文件最后，会调用NSIS将编译后的文件，打包成输入法安装程序。
 
