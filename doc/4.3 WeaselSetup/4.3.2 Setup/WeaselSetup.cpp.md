@@ -2,6 +2,10 @@
 
 在`install.nsi`脚本中，以`WeaselSetup.exe /i`方式调用输入法安装程序。参数`/i`为默认安装方式。
 
+调试时，选择32位版，参数设为`/i`。
+
+![debug](debug.png)
+
 #### 4.3.2.1 _tWinMain
 
 在_tWinMain函数中，以命令行参数`lpstrCmdLine`为参数调用Run函数。

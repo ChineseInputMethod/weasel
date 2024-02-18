@@ -25,3 +25,5 @@
 ### 4.3.2 [Setup](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/4.3.2%20Setup/WeaselSetup.cpp.md)
 
 ### 4.3.3 [Option](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/4.3.3%20Option/InstallOptionsDlg.cpp.md)
+
+### 4.3.4 [register](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/4.3.4%20register/imesetup.cpp.md)
