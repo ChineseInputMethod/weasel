@@ -4,7 +4,7 @@
 
 ![Option](InstallOptionsDlg.png)
 
-#### 4.3.3.1 InstallOptions
+#### 4.3.3.1 InstallOptions()
 
 在对话框类`OnInitDialog`方法中，为控件设置参数。
 第一次安装输入法，相应控件处于可选状态。

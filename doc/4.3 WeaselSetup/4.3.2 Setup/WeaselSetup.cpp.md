@@ -6,7 +6,7 @@
 
 ![debug](debug.png)
 
-#### 4.3.2.1 _tWinMain
+#### 4.3.2.1 _tWinMain()
 
 在_tWinMain函数中，以命令行参数`lpstrCmdLine`为参数调用Run函数。
 
@@ -42,7 +42,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 
 >没有等于3072的LCID，作者（在后文中以作者指称源码的编写人）可能想要标识的是马来西亚或香港的LCID。
 
-#### 4.3.2.2 Run
+#### 4.3.2.2 Run()
 
 当参数为`/u`时，静默调用卸载函数。当参数为`/s`时，静默安装简体版。当参数为`/t`时，静默安装繁体版。当参数为`/i`时，调用CustomInstall函数。
 
@@ -66,7 +66,7 @@ static int Run(LPTSTR lpCmdLine)
 }
 ```
 
-#### 4.3.2.3 CustomInstall
+#### 4.3.2.3 CustomInstall()
 
 CustomInstall函数通过打开注册表键`RegOpenKey(HKEY_CURRENT_USER, KEY, &hKey)`，来判断是否曾经安装过输入法（因为卸载输入法时，该键没有被删除）。
 如果曾经安装过输入法，那么将会执行`silent = true;`语句，设置为静默安装输入法。
