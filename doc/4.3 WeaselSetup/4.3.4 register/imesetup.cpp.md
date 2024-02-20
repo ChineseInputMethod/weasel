@@ -1,7 +1,6 @@
 ### 4.3.4 [register](https://github.com/ChineseInputMethod/weasel/blob/master/doc/4.3%20WeaselSetup/4.3.4%20register/imesetup.cpp.md)
 
-在`imesetup.cpp`文件中完成输入法的部署。
-调试时，需要手动删除注册表`\HKEY_CURRENT_USER\Software\Rime`键和系统目录里的`weasel.dll`文件，以模拟第一次安装输入法场景。
+在`imesetup.cpp`文件中完成输入法的部署。调试时，需要手动删除注册表`\HKEY_CURRENT_USER\Software\Rime`键和系统目录里的`weasel.dll`文件，以模拟第一次安装输入法场景。
 
 #### 4.3.4.1 install()
 
@@ -128,5 +127,65 @@ int install_ime_file(std::wstring& srcPath, const std::wstring& ext, bool hant, 
 		}
 	}
 	return retval;
+}
+```
+
+#### 4.3.4.3 register_text_service()
+
+在将输入法拷贝到系统目录后，调用`register_text_service`函数注册输入法。
+[第二章][1]和[第三章][2]讲解了在TSF输入法内部完成的输入法注册过程。
+本小节演示了外部程序如何将一个TSF输入法注册到系统。
+
+[1]: https://github.com/ChineseInputMethod/TSFexample/tree/master/1BasicTextService
+[2]: https://github.com/ChineseInputMethod/SampleIME/blob/master/doc/Register.md
+
+```CPP
+int register_text_service(const std::wstring& tsf_path, bool register_ime, bool is_wow64, bool hant, bool silent)
+{
+	using RegisterServerFunction = HRESULT(STDAPICALLTYPE*)();
+
+	if (!register_ime)
+		enable_profile(FALSE, hant);
+
+	std::wstring params = L" \"" + tsf_path + L"\"";
+	if (!register_ime)
+	{
+		params = L" /u " + params;  // unregister
+	}
+	//if (silent)  // always silent
+	{
+		params = L" /s " + params;
+	}
+	SHELLEXECUTEINFOW shExInfo = { 0 };
+	shExInfo.cbSize = sizeof(shExInfo);
+	shExInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+	shExInfo.hwnd = 0;
+	shExInfo.lpVerb = L"open";                 // Operation to perform
+	shExInfo.lpFile = L"regsvr32.exe";         // Application to start    
+	shExInfo.lpParameters = params.c_str();    // Additional parameters
+	shExInfo.lpDirectory = 0;
+	shExInfo.nShow = SW_SHOW;
+	shExInfo.hInstApp = 0;
+	if (ShellExecuteExW(&shExInfo))
+	{
+		WaitForSingleObject(shExInfo.hProcess, INFINITE);
+		CloseHandle(shExInfo.hProcess);
+	}
+	else
+	{
+		WCHAR msg[100];
+		CString str;
+		str.LoadStringW(IDS_STR_ERRREGTSF);
+		StringCchPrintfW(msg, _countof(msg), str, params.c_str());
+		//StringCchPrintfW(msg, _countof(msg), L"註冊輸入法錯誤 regsvr32.exe %s", params.c_str());
+		//if (!silent) MessageBoxW(NULL, msg, L"安装/卸載失败", MB_ICONERROR | MB_OK);
+		MSG_NOT_SILENT_ID_CAP(silent, msg, IDS_STR_INORUN_FAILED, MB_ICONERROR | MB_OK);
+		return 1;
+	}
+
+	if (register_ime)
+		enable_profile(TRUE, hant);
+
+	return 0;
 }
 ```
