@@ -189,3 +189,34 @@ int register_text_service(const std::wstring& tsf_path, bool register_ime, bool 
 	return 0;
 }
 ```
+
+#### 4.3.4.4 enable_profile()
+
+注册输入法后，启用输入法语言配置文件。
+
+```CPP
+void enable_profile(BOOL fEnable, bool hant) {
+	HRESULT hr;
+	ITfInputProcessorProfiles* pProfiles = NULL;
+
+	hr = CoCreateInstance(CLSID_TF_InputProcessorProfiles,
+		NULL,
+		CLSCTX_INPROC_SERVER,
+		IID_ITfInputProcessorProfiles,
+		(LPVOID*)&pProfiles);
+
+	if (SUCCEEDED(hr))
+	{
+		LANGID lang_id = hant ? 0x0404 : 0x0804;
+		if (fEnable) {
+			pProfiles->EnableLanguageProfile(c_clsidTextService, lang_id, c_guidProfile, fEnable);
+			pProfiles->EnableLanguageProfileByDefault(c_clsidTextService, lang_id, c_guidProfile, fEnable);
+		}
+		else {
+			pProfiles->RemoveLanguageProfile(c_clsidTextService, lang_id, c_guidProfile);
+		}
+
+		pProfiles->Release();
+	}
+}
+```
