@@ -167,7 +167,7 @@ engine:
 
 在`schema/translators`段落，添加`punct_translator`组件。告诉输入法引擎，要对符号进行转换。并在`punctuator`段落，导入`default`符号表。
 
-下面是实现上述功能的`hello.dict.yaml`文件内容。
+下面是实现上述功能的`hello.schema.yaml`文件内容。
 
 ```
 # Rime schema

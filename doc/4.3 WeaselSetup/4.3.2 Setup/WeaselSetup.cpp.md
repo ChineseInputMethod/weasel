@@ -40,7 +40,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 }
 ```
 
->没有等于3072的LCID，作者（在后文中以作者指称源码的编写人）可能想要标识的是马来西亚或香港的LCID。
+>没有找到等于3072的LCID，作者（在后文中以作者指称源码的编写人）可能想要标识的是马来西亚的LCID。
 
 #### 4.3.2.2 Run()
 
