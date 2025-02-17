@@ -2,7 +2,7 @@
 
 这个项目是源自`https://github.com/rime/weasel.git`
 
-我将上述仓库做为子模块clone到了weasel目录里。
+请另外clone'weasel'工程。
 
 doc目录里的文件是我对这个仓库编写的文档。
 
