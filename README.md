@@ -2,7 +2,9 @@
 
 这个项目是源自`https://github.com/rime/weasel.git`
 
-请另外clone'weasel'工程。
+请使用以下命令clone`weasel`工程。
+
+`git clone --recursive git@github.com:rime/weasel.git`
 
 doc目录里的文件是我对这个仓库编写的文档。
 
