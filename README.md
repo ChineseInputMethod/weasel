@@ -4,7 +4,7 @@
 
 请使用以下命令clone`weasel`工程。
 
-`git clone --recursive git@github.com:rime/weasel.git`
+`git clone --recursive https://github.com/rime/weasel.git`
 
 doc目录里的文件是我对这个仓库编写的文档。
 
