@@ -3,7 +3,11 @@
 tools									|Description
 -|-
 [Boost C++ Libraries][1]				|本仓库必选项。
-[Nullsoft Scriptable Install System][2]	|用于打包生成的输入法安装程序。
+[CMake][2]							|vs自带的版本过低。
+[Python][3]							|vs2022自带的下载缓慢。
+[Nullsoft Scriptable Install System][4]	|用于打包生成的输入法安装程序。
 
 [1]: https://www.boost.org
-[2]: https://nsis.sourceforge.io/Main_Page
+[2]: https://cmake.org/download/
+[3]: https://www.python.org/downloads/
+[4]: https://cmake.org/download/
